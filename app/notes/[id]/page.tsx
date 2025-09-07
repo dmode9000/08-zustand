@@ -1,3 +1,5 @@
+// Next & React
+import { Metadata } from "next";
 // Libraries
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 // Services
@@ -9,7 +11,7 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const { title, content } = await fetchNoteById(id);
 

@@ -1,3 +1,5 @@
+// next & react
+import { Metadata } from "next";
 //libraries
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 //components
@@ -12,7 +14,7 @@ type Props = {
   params: Promise<{ slug: string[] }>;
 };
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tag = slug.length > 0 ? (slug[0] as Tag) : noteTags[0];
   return {
@@ -37,12 +39,13 @@ export async function generateMetadata({ params }: Props) {
 
 // This is a Server Component
 export default async function NotesPage({ params }: Props) {
-  const { slug } = await params;
-  const tag = slug.length > 0 ? (slug[0] as Tag) : noteTags[0];
-
   const queryClient = new QueryClient();
 
-  const fetchParams = tag ? { page: 1, search: "", tag: tag } : { page: 1, search: "" };
+  const { slug } = await params;
+
+  const tag = noteTags.includes(slug[0] as Tag) ? (slug[0] as Tag) : undefined;
+
+  const fetchParams = { page: 1, search: "", tag };
 
   await queryClient.prefetchQuery({
     queryKey: ["notes", fetchParams],
@@ -52,7 +55,7 @@ export default async function NotesPage({ params }: Props) {
   return (
     <div className={css.app}>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <NotesClient filter={slug} />
+        <NotesClient filter={tag} />
       </HydrationBoundary>
     </div>
   );

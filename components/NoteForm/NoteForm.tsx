@@ -46,7 +46,7 @@ export default function NoteForm() {
   const handleCancel = () => router.push("/notes/filter/All");
 
   return (
-    <form className={css.form}>
+    <form action={handleSubmit} className={css.form}>
       <div className={css.formGroup}>
         <label htmlFor={`${fieldId}-title`}>Title</label>
         <input
@@ -95,12 +95,7 @@ export default function NoteForm() {
         <button type="button" onClick={handleCancel} className={css.cancelButton}>
           Cancel
         </button>
-        <button
-          type="submit"
-          formAction={handleSubmit}
-          className={css.submitButton}
-          disabled={isPending}
-        >
+        <button type="submit" className={css.submitButton} disabled={isPending}>
           {isPending ? "Creating..." : "Create note"}
         </button>
       </div>
